@@ -1,8 +1,23 @@
 #!/bin/sh
 # Roda análise estática e testes antes de enviar para o GitHub
 
-echo "Rodando PHPStan..."
-docker compose exec -T orders ./vendor/bin/phpstan analyse --memory-limit=1G --no-progress || exit 1
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
 
-echo "Rodando testes..."
-docker compose exec -T orders php artisan test || exit 1
+printf "${YELLOW}▶ Rodando PHPStan...${NC}\n"
+if ! docker compose exec -T orders ./vendor/bin/phpstan analyse --memory-limit=1G --no-progress --ansi; then
+  printf "${RED}✖ PHPStan encontrou erros. Push cancelado.${NC}\n"
+  exit 1
+fi
+printf "${GREEN}✔ PHPStan ok${NC}\n\n"
+
+printf "${YELLOW}▶ Rodando testes...${NC}\n"
+if ! docker compose exec -T orders php artisan test --colors=always; then
+  printf "${RED}✖ Testes falharam. Push cancelado.${NC}\n"
+  exit 1
+fi
+printf "${GREEN}✔ Testes ok${NC}\n\n"
+
+printf "${GREEN}✔ Tudo certo, enviando para o GitHub...${NC}\n"
