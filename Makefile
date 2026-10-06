@@ -27,3 +27,9 @@ test: ## Roda os testes
 
 logs: ## Mostra os logs em tempo real
 	docker compose logs -f
+
+lint: ## Verifica o estilo do código sem alterar nada
+	docker compose exec orders ./vendor/bin/pint --test
+
+format: ## Corrige o estilo do código automaticamente
+	docker compose exec orders ./vendor/bin/pint
