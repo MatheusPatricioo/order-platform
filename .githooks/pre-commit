@@ -1,9 +1,14 @@
 #!/bin/sh
 # Bloqueia o commit se o código estiver fora do padrão do Pint
 
-echo "Verificando estilo do código..."
+GREEN='\033[0;32m'
+RED='\033[0;31m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
 
-if ! docker compose exec -T orders ./vendor/bin/pint --test; then
-  echo "Código fora do padrão. Rode 'make format' e tente de novo."
+printf "${YELLOW}▶ Verificando estilo do código...${NC}\n"
+if ! docker compose exec -T orders ./vendor/bin/pint --test --ansi; then
+  printf "${RED}✖ Código fora do padrão. Rode 'make format' e tente de novo.${NC}\n"
   exit 1
 fi
+printf "${GREEN}✔ Estilo ok${NC}\n"
