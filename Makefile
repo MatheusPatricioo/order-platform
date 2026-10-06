@@ -1,4 +1,4 @@
-.PHONY: setup up down build restart shell migrate test logs
+.PHONY: setup up down build restart shell migrate test logs lint format analyse hooks
 
 setup: ## Primeira execução: sobe tudo, ajusta permissões, roda migrations e ativa os hooks
 	git config core.hooksPath .githooks
@@ -34,6 +34,9 @@ lint: ## Verifica o estilo do código sem alterar nada
 
 format: ## Corrige o estilo do código automaticamente
 	docker compose exec orders ./vendor/bin/pint
+
+analyse: ## Análise estática com PHPStan
+	docker compose exec orders ./vendor/bin/phpstan analyse --memory-limit=1G
 
 hooks: ## Ativa os Git hooks do projeto
 	git config core.hooksPath .githooks
