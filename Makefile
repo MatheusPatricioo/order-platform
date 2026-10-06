@@ -1,6 +1,7 @@
 .PHONY: setup up down build restart shell migrate test logs
 
-setup: ## Primeira execução: sobe tudo, ajusta permissões e roda migrations
+setup: ## Primeira execução: sobe tudo, ajusta permissões, roda migrations e ativa os hooks
+	git config core.hooksPath .githooks
 	docker compose up -d --build
 	docker compose exec orders chmod -R 777 storage bootstrap/cache
 	docker compose exec orders php artisan migrate
@@ -33,3 +34,6 @@ lint: ## Verifica o estilo do código sem alterar nada
 
 format: ## Corrige o estilo do código automaticamente
 	docker compose exec orders ./vendor/bin/pint
+
+hooks: ## Ativa os Git hooks do projeto
+	git config core.hooksPath .githooks

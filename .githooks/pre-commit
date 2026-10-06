@@ -1,0 +1,9 @@
+#!/bin/sh
+# Bloqueia o commit se o código estiver fora do padrão do Pint
+
+echo "Verificando estilo do código..."
+
+if ! docker compose exec -T orders ./vendor/bin/pint --test; then
+  echo "Código fora do padrão. Rode 'make format' e tente de novo."
+  exit 1
+fi
