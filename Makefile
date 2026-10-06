@@ -1,0 +1,29 @@
+.PHONY: setup up down build restart shell migrate test logs
+
+setup: ## Primeira execução: sobe tudo, ajusta permissões e roda migrations
+	docker compose up -d --build
+	docker compose exec orders chmod -R 777 storage bootstrap/cache
+	docker compose exec orders php artisan migrate
+
+up: ## Sobe os containers
+	docker compose up -d
+
+down: ## Para e remove os containers
+	docker compose down
+
+build: ## Reconstrói as imagens e sobe
+	docker compose up -d --build
+
+restart: down up ## Reinicia tudo
+
+shell: ## Abre o terminal dentro do container do orders
+	docker compose exec orders bash
+
+migrate: ## Roda as migrations
+	docker compose exec orders php artisan migrate
+
+test: ## Roda os testes
+	docker compose exec orders php artisan test
+
+logs: ## Mostra os logs em tempo real
+	docker compose logs -f
