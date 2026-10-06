@@ -1,0 +1,8 @@
+#!/bin/sh
+# Roda análise estática e testes antes de enviar para o GitHub
+
+echo "Rodando PHPStan..."
+docker compose exec -T orders ./vendor/bin/phpstan analyse --memory-limit=1G --no-progress || exit 1
+
+echo "Rodando testes..."
+docker compose exec -T orders php artisan test || exit 1
