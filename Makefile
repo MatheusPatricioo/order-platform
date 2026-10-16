@@ -1,8 +1,11 @@
 .PHONY: setup up down build restart shell migrate test logs lint format analyse hooks
 
-setup: ## Primeira execução: sobe tudo, ajusta permissões, roda migrations e ativa os hooks
+setup: ## Primeira execução: sobe tudo, instala dependências, gera o .env, roda migrations e ativa os hooks
 	git config core.hooksPath .githooks
 	docker compose up -d --build
+	docker compose exec orders sh -c '[ -f .env ] || cp .env.example .env'
+	docker compose exec orders composer install --no-interaction
+	docker compose exec orders sh -c 'grep -q "^APP_KEY=base64" .env || php artisan key:generate'
 	docker compose exec orders chmod -R 777 storage bootstrap/cache
 	docker compose exec orders php artisan migrate
 
