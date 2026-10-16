@@ -10,9 +10,7 @@ final readonly class ProductName
 {
     private const MAX_LENGTH = 255;
 
-    private function __construct(public string $value)
-    {
-    }
+    private function __construct(public string $value) {}
 
     public static function fromString(string $value): self
     {

@@ -10,9 +10,7 @@ final readonly class Sku
 {
     private const PATTERN = '/^[A-Z0-9][A-Z0-9-]{2,31}$/';
 
-    private function __construct(public string $value)
-    {
-    }
+    private function __construct(public string $value) {}
 
     public static function fromString(string $value): self
     {

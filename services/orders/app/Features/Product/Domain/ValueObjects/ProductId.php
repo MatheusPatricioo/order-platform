@@ -10,9 +10,7 @@ final readonly class ProductId
 {
     private const ULID_PATTERN = '/^[0-7][0-9A-HJKMNP-TV-Z]{25}$/';
 
-    private function __construct(public string $value)
-    {
-    }
+    private function __construct(public string $value) {}
 
     public static function fromString(string $value): self
     {

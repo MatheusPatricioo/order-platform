@@ -18,8 +18,7 @@ final class Product
         public readonly Sku $sku,
         public readonly Money $price,
         public private(set) Quantity $stock,
-    ) {
-    }
+    ) {}
 
     public function hasStockFor(Quantity $quantity): bool
     {
