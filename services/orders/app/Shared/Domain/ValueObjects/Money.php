@@ -4,14 +4,14 @@ declare(strict_types=1);
 
 namespace App\Shared\Domain\ValueObjects;
 
-use InvalidArgumentException;
+use App\Shared\Domain\Exceptions\InvalidMoneyException;
 
 final readonly class Money
 {
     private function __construct(public int $cents)
     {
         if ($cents < 0) {
-            throw new InvalidArgumentException('Money cannot be negative.');
+            throw InvalidMoneyException::negativeAmount($cents);
         }
     }
 
@@ -32,6 +32,10 @@ final readonly class Money
 
     public function multiply(int $quantity): self
     {
+        if ($quantity < 0) {
+            throw InvalidMoneyException::negativeQuantity($quantity);
+        }
+
         return new self($this->cents * $quantity);
     }
 

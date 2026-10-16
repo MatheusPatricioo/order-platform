@@ -4,8 +4,8 @@ declare(strict_types=1);
 
 namespace Tests\Unit\Shared;
 
+use App\Shared\Domain\Exceptions\InvalidMoneyException;
 use App\Shared\Domain\ValueObjects\Money;
-use InvalidArgumentException;
 use PHPUnit\Framework\TestCase;
 
 final class MoneyTest extends TestCase
@@ -17,7 +17,7 @@ final class MoneyTest extends TestCase
 
     public function testCannotBeNegative(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(InvalidMoneyException::class);
 
         Money::fromCents(-1);
     }
@@ -34,11 +34,19 @@ final class MoneyTest extends TestCase
         $this->assertSame(5970, Money::fromCents(1990)->multiply(3)->cents);
     }
 
+    public function testCannotMultiplyByNegativeQuantity(): void
+    {
+        $this->expectException(InvalidMoneyException::class);
+
+        Money::fromCents(1000)->multiply(-1);
+    }
+
     public function testOperationsDoNotChangeTheOriginal(): void
     {
         $price = Money::fromCents(1000);
 
         $price->add(Money::fromCents(500));
+        $price->multiply(3);
 
         $this->assertSame(1000, $price->cents);
     }
